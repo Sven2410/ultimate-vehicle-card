@@ -8,7 +8,7 @@
  * Licentie: MIT
  */
 
-const UVC_VERSION = '1.0.0';
+const UVC_VERSION = '1.1.0';
 
 console.info(
   '%c ULTIMATE-VEHICLE-CARD %c v' + UVC_VERSION + ' ',
@@ -356,10 +356,10 @@ class UltimateVehicleCard extends HTMLElement {
       '<div class="g-top">' +
         '<ha-icon></ha-icon>' +
         '<span class="g-label"></span>' +
+        '<span class="g-sub"></span>' +
         '<span class="g-val"></span>' +
       '</div>' +
-      '<div class="g-bar"><div class="g-fill"></div></div>' +
-      '<div class="g-sub"></div>';
+      '<div class="g-bar"><div class="g-fill"></div></div>';
     uvcTap(el, () => this._moreInfo(entityId));
     return {
       el, entityId, rangeId, kind,
@@ -430,7 +430,7 @@ class UltimateVehicleCard extends HTMLElement {
     const rst = this._st(g.rangeId);
     if (rst) {
       g.sub.style.display = '';
-      g.sub.textContent = 'Bereik ' + this._fmt(rst);
+      g.sub.textContent = '· ' + this._fmt(rst);
     } else {
       g.sub.style.display = 'none';
     }
@@ -483,42 +483,50 @@ class UltimateVehicleCard extends HTMLElement {
       :host { display: block; }
       ha-card { padding: 0; }
       .uvc {
-        display: flex; flex-direction: column; gap: 14px;
-        padding: 16px;
+        display: flex; flex-direction: column; gap: 8px;
+        padding: 12px;
         color: var(--primary-text-color);
       }
+
+      /* Header */
       .uvc-header {
-        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
       }
-      .uvc-title { font-size: 1.3rem; font-weight: 600; line-height: 1.2; }
-      .uvc-name { font-size: 0.85rem; color: var(--secondary-text-color); margin-top: 2px; }
+      .uvc-title { font-size: 1.05rem; font-weight: 600; line-height: 1.15; }
+      .uvc-name { font-size: 0.75rem; color: var(--secondary-text-color); margin-top: 1px; }
       .uvc-badge {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 4px 10px; border-radius: 999px;
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 3px 9px; border-radius: 999px;
         background: color-mix(in srgb, var(--primary-color) 16%, transparent);
         color: var(--primary-color);
-        font-size: 0.78rem; font-weight: 600; white-space: nowrap;
+        font-size: 0.72rem; font-weight: 600; white-space: nowrap;
       }
-      .uvc-badge ha-icon { --mdc-icon-size: 18px; }
+      .uvc-badge ha-icon { --mdc-icon-size: 15px; }
 
+      /* Hero */
       .uvc-hero {
-        width: 100%; border-radius: 18px; overflow: hidden;
+        width: 100%; border-radius: 14px; overflow: hidden;
         background: var(--secondary-background-color);
       }
-      .uvc-hero img { width: 100%; height: auto; display: block; object-fit: cover; }
+      .uvc-hero img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 200px; }
 
-      .uvc-gauges { display: flex; flex-direction: column; gap: 12px; }
-      .uvc-gauge {
-        display: flex; flex-direction: column; gap: 6px;
-        padding: 12px 14px; border-radius: 16px;
+      /* Meters: één strak paneel met dunne balken */
+      .uvc-gauges {
+        display: flex; flex-direction: column; gap: 10px;
+        padding: 10px 12px; border-radius: 14px;
         background: var(--secondary-background-color);
       }
-      .g-top { display: flex; align-items: center; gap: 10px; }
-      .g-top ha-icon { color: var(--primary-color); --mdc-icon-size: 22px; }
-      .g-label { flex: 1; font-size: 0.9rem; font-weight: 500; }
-      .g-val { font-size: 1rem; font-weight: 700; }
+      .uvc-gauge { display: flex; flex-direction: column; gap: 5px; }
+      .g-top { display: flex; align-items: baseline; gap: 6px; }
+      .g-top ha-icon {
+        color: var(--primary-color); --mdc-icon-size: 17px;
+        align-self: center; flex: 0 0 auto;
+      }
+      .g-label { font-size: 0.8rem; font-weight: 500; }
+      .g-sub { font-size: 0.72rem; color: var(--secondary-text-color); }
+      .g-val { margin-left: auto; font-size: 0.9rem; font-weight: 700; }
       .g-bar {
-        height: 10px; border-radius: 999px; overflow: hidden;
+        height: 7px; border-radius: 999px; overflow: hidden;
         background: color-mix(in srgb, var(--primary-text-color) 12%, transparent);
       }
       .g-fill {
@@ -526,60 +534,64 @@ class UltimateVehicleCard extends HTMLElement {
         background: var(--primary-color);
         transition: width .5s ease, background .3s ease;
       }
-      .g-sub { font-size: 0.78rem; color: var(--secondary-text-color); }
 
+      /* Kilometerstand: slanke regel */
       .uvc-odo {
-        display: flex; align-items: center; gap: 10px;
-        padding: 12px 14px; border-radius: 16px;
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 12px; border-radius: 14px;
         background: var(--secondary-background-color);
       }
-      .uvc-odo ha-icon { color: var(--primary-color); --mdc-icon-size: 22px; }
-      .odo-label { flex: 1; font-size: 0.9rem; font-weight: 500; }
-      .odo-val { font-size: 1.05rem; font-weight: 700; }
+      .uvc-odo ha-icon { color: var(--primary-color); --mdc-icon-size: 18px; }
+      .odo-label { flex: 1; font-size: 0.8rem; font-weight: 500; }
+      .odo-val { font-size: 0.92rem; font-weight: 700; }
 
+      /* Statustegels: dicht raster */
       .uvc-tiles {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-        gap: 10px;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 6px;
       }
       .uvc-tile {
-        display: flex; flex-direction: column; align-items: center; gap: 4px;
-        padding: 12px 8px; border-radius: 14px; text-align: center;
+        display: flex; flex-direction: column; align-items: center; gap: 2px;
+        padding: 7px 4px; border-radius: 12px; text-align: center;
         background: var(--secondary-background-color);
       }
-      .uvc-tile ha-icon { color: var(--primary-color); --mdc-icon-size: 26px; }
-      .t-label { font-size: 0.72rem; color: var(--secondary-text-color); line-height: 1.1; }
-      .t-val { font-size: 0.85rem; font-weight: 600; line-height: 1.15; }
+      .uvc-tile ha-icon { color: var(--primary-color); --mdc-icon-size: 20px; }
+      .t-label { font-size: 0.62rem; color: var(--secondary-text-color); line-height: 1.05; }
+      .t-val { font-size: 0.74rem; font-weight: 600; line-height: 1.1; }
 
+      /* Locatie */
       .uvc-loc {
-        display: flex; flex-direction: column; gap: 8px;
-        padding: 12px 14px; border-radius: 16px;
+        display: flex; flex-direction: column; gap: 6px;
+        padding: 8px 12px 10px; border-radius: 14px;
         background: var(--secondary-background-color);
       }
-      .loc-head { display: flex; align-items: center; gap: 8px; }
-      .loc-head ha-icon { color: var(--primary-color); --mdc-icon-size: 20px; }
-      .loc-text { flex: 1; font-size: 0.9rem; font-weight: 500; }
+      .loc-head { display: flex; align-items: center; gap: 7px; }
+      .loc-head ha-icon { color: var(--primary-color); --mdc-icon-size: 18px; }
+      .loc-text { flex: 1; font-size: 0.8rem; font-weight: 500; }
       .loc-open {
-        font-size: 0.8rem; font-weight: 600; text-decoration: none;
+        font-size: 0.72rem; font-weight: 600; text-decoration: none;
         color: var(--primary-color);
         padding: 6px 8px; border-radius: 8px;
         touch-action: manipulation; -webkit-tap-highlight-color: transparent;
       }
       .loc-mapwrap {
-        border-radius: 14px; overflow: hidden;
+        border-radius: 11px; overflow: hidden;
         border: 1px solid var(--divider-color);
       }
-      .loc-map { width: 100%; height: 180px; border: 0; display: block; }
+      .loc-map { width: 100%; height: 130px; border: 0; display: block; }
 
       .uvc-hint {
-        font-size: 0.85rem; color: var(--secondary-text-color);
-        padding: 8px 2px;
+        font-size: 0.8rem; color: var(--secondary-text-color);
+        padding: 6px 2px;
       }
 
+      /* Tikbaar (mobiel + desktop) */
       .uvc-clickable {
-        cursor: pointer; min-height: 44px;
+        cursor: pointer;
         touch-action: manipulation; -webkit-tap-highlight-color: transparent;
         transition: transform .1s ease, filter .15s ease;
       }
+      .uvc-tile.uvc-clickable, .uvc-odo.uvc-clickable { min-height: 44px; }
       .uvc-clickable:active { transform: scale(.985); }
       @media (hover: hover) { .uvc-clickable:hover { filter: brightness(1.08); } }
     `;
